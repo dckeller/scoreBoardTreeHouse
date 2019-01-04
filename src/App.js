@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Header from './Header';
 import Player from './Player';
+import AddPlayerForm from './AddPlayerForm';
 
 class App extends Component {
 
@@ -29,9 +30,23 @@ class App extends Component {
     ]
   };
 
+  // player id counter
+  prevPlayerId = 4;
+
   handleScoreChange = (index, delta) => {
     this.setState( prevState => ({
       score: prevState.players[index].score += delta   
+    }));
+  }
+
+  handleAddPlayer = (name) => {
+    let newplayer = {
+      name,
+      score: 0,
+      id: this.prevPlayerId += 1
+    }
+    this.setState( prevState => ({
+      players: prevState.players.concat(newplayer)
     }));
   }
 
@@ -48,10 +63,9 @@ class App extends Component {
       <div className="scoreboard">
       <Header 
       title="Scoreboard" 
-      totalPlayers={ this.state.players.length }
+      players={ this.state.players }
       />
 
-    {/* JavaScript Iteration */}
     {this.state.players.map( (player, index) => 
       <Player
       name={player.name}
@@ -62,7 +76,9 @@ class App extends Component {
       index={index}
       removePlayer={this.handleDeletePlayer}
       /> 
-      )}
+    )}
+
+    <AddPlayerForm addPlayer={this.handleAddPlayer}/>
     </div>
     );
   }
